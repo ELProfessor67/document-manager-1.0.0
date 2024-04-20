@@ -1,0 +1,22 @@
+
+<header>
+    <nav>
+        <input type="checkbox" id="nav-toggle">
+        <div class="logo">Document <strong> Manager</strong></div>
+        <ul class="links">
+          <li><a href="/documents-lists">My Documents</a></li>
+          <li><a href="#about">About</a></li>
+          {%if user.is_superuser %}
+            <li><a href="/all-users/">All User</a></li>
+            <li><a href="/admin/">Dashboard</a></li>
+          {%endif%}
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="/logout">Logout</a></li>
+        </ul>
+        <label for="nav-toggle" class="icon-burger">
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line"></div>
+        </label>
+      </nav>
+</header>
