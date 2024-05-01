@@ -1,98 +1,81 @@
-<!-- registration/register.html -->
+<!-- registration/login.html -->
 {%load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Registration</title>
-    <!-- <link rel="stylesheet" href="{% static '/styles.css' %}"> -->
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+    <title>User Login</title>
+    <link rel="stylesheet" href="{% static '/css/style.css' %}">
 
-        .container {
-            width: 400px;
-            padding: 30px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            position: relative;
-        }
-
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        form {
-            margin-top: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="password"] {
-            box-sizing: border-box;
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        button {
-            width: 100%;
-            background-color: #4caf50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        .error-message {
-            color: red;
-            margin-top: 10px;
-        }
-    </style>
 </head>
+
 <body>
-    <div class="container">
-        <h2>User Registration</h2>
-        <form method="post">
-            {% csrf_token %}
-            <label for="id_username">Username:</label>
-            <input type="text" name="username" id="id_username">
-            <label for="id_email">Email:</label>
-            <input type="email" name="email" id="id_email">
-            <label for="id_password1">Password:</label>
-            <input type="password" name="password" id="id_password">
-            <label for="id_password2">Confirm Password:</label>
-            <input type="password" name="cpassword" id="id_password2">
-            <p>If you already have account <a href="/">Sign In</a></p>
-            {%if error_message%}
-                <p class="error-message">{{error_message}}</p>
-            {%endif%}
-            <button type="submit">Register</button>
-        </form>
-    </div>
+    <section class="bg-gray-50 dark:bg-gray-900">
+        <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+            
+            <div
+                class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+                <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                    <h1
+                        class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                        Sign in to your account
+                    </h1>
+                    <p class="text-red-700">{{error_message}}</p>
+                    <form class="space-y-4 md:space-y-6" method="post">
+                        {% csrf_token %}
+                        <div>
+                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your
+                                username</label>
+                            <input type="text" name="username" id="username"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="name@company.com" required="">
+                        </div>
+                        <div>
+                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">email</label>
+                            <input type="text" name="email" id="email"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="name@company.com" required="">
+                        </div>
+                        <div>
+                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">role</label>
+                            <select type="text" name="role" id="role"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="name@company.com" required="">
+                                {%for role in roles%}
+
+                                <option value="{{role.id}}">{{role.name}}</option>
+                                {%endfor%}
+                            </select>
+                        </div>
+                        <div>
+                            <label for="password"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                            <input type="password" name="password" id="password" placeholder="••••••••"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                required="">
+                        </div>
+                        <div>
+                            <label for="password"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cofirm Password</label>
+                            <input type="password" name="cpassword" id="cpassword" placeholder="••••••••"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                required="">
+                        </div>
+                        
+                        <button type="submit"
+                            class="w-full text-white  font-medium rounded-lg text-sm px-5 py-2.5 text-center !bg-indigo-500">Sign
+                            Up</button>
+                        <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+                            Already have an account yet? <a href="/"
+                                class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign In</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
 </body>
+
 </html>

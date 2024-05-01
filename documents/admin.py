@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import Documents,Role, UsersDocuments
 
-# Register your models here.
+admin.site.register(Documents)
+admin.site.register(Role)
+admin.site.register(UsersDocuments)

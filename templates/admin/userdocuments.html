@@ -1,0 +1,111 @@
+{% extends "partials/sidebar.html" %}
+{%load static%}
+{% block content %}
+<div class="flex justify-end items-center">
+    <a id="newDocumentLink" class="text-white text-lg py-2 px-4 bg-indigo-500 rounded-md" href="#">New Document</a>
+
+</div>
+<div class="flex flex-col gap-5 mt-10" style="margin-top: 2rem;">
+    {%for document in documents%}
+    
+        <div class="flex items-center justify-between">
+            <a href="/{{document.files}}"  class="flex items-center">     
+                    <img src="{%static '/assets/image-icon.png'%}" class="w-10 h-10" style="width: 2rem;" />
+                    <p class="text-white">{{document.document.name}}</p>
+            </a>
+            <span class="text-white">
+                {%if document.approve%}
+                    Approved
+                {%else%}
+                    Disapproved
+                {%endif%}
+            </span>
+            <a class="text-white hover:text-green-600 cursor-pointer" href="/dashbaord/edit/{{document.id}}">
+                Edit
+            </a>
+        </div>
+    {%endfor%}
+</div>
+
+
+<div class="absolute z-50 h-screen w-full top-0 left-0 " style="padding-top: 8rem; display: none;" id="newDocumentModal">
+    <div class="!mx-auto !max-w-[50rem] !bg-gray-900 !p-5 !rounded-md" style="
+    min-height: 30rem;
+    max-width: 50rem;
+    background: rgb(20, 20, 20);
+    margin: auto;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+">
+<div class="absolute right-0 top-0" style="right: 1%; top: 1%;">
+    <span class="text-white text-xl cursor-pointer close" style="cursor: pointer; font-size: 2rem;">&times;</span>
+</div>
+        <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+            Get Documents
+        </h1>
+        <form class="space-y-4 md:space-y-6" method="post" style="width: 90%;" id="form">
+            {% csrf_token %}
+            <div>
+                <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Document</label>
+                <select type="text" name="document" id="document"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    >
+                    {% for document in lefted_documents%}
+                    <option value="{{document.id}}">{{document.name}}</option>
+                    {%endfor%}
+                </select>
+            </div>
+          
+            <button type="submit"
+                class="w-full text-white  font-medium rounded-lg text-sm px-5 py-2.5 text-center !bg-indigo-500">Get Now</button>
+
+        </form>
+    </div>
+</div>
+<a id="a" class="hidden"></a>
+
+
+<script>
+    // Get the modal
+    var modal = document.getElementById("newDocumentModal");
+    
+    // Get the link that opens the modal
+    var link = document.getElementById("newDocumentLink");
+    
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+    
+    // When the user clicks the link, open the modal
+    link.onclick = function() {
+      modal.style.display = "block";
+    }
+    
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+      modal.style.display = "none";
+    }
+
+    const form = document.getElementById('form');
+    const documentSelected = document.getElementById('document');
+    form.addEventListener('submit',(e) => {
+        e.preventDefault();
+        const value = documentSelected.value
+        const anchor = document.getElementById('a');
+        anchor.href = `/send-mail/${value}/{{id}}`;
+        anchor.click()
+    })
+    
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+    </script>
+    
+
+{% endblock %}

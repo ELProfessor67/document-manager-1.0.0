@@ -1,0 +1,14 @@
+{% extends "partials/sidebar.html" %}
+{%load static%}
+{% block content %}
+<div class="flex flex-col gap-4">
+    {%for user in users%}
+        <a href="/dashboard/user/{{user.id}}">
+            <div class="flex items-center">
+                <img src="{%static '/assets/file-icon.png'%}" class="w-10 h-10" style="width: 2rem;"/>
+                <p class="text-white">{{user.username}}</p>
+            </div>
+        </a>
+    {%endfor%}
+</div>         
+{% endblock %}
