@@ -1,8 +1,10 @@
-from django.shortcuts import render, HttpResponse, get_object_or_404
+from django.shortcuts import render, HttpResponse, get_object_or_404, redirect
 from documents.models import Documents,Role, UsersDocuments
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from urllib.parse import urlparse
 
 # Create your views here.
 def admin_dashboard(request):
@@ -73,6 +75,61 @@ def user_details(request,id):
    
     return render(request,'admin/userdocuments.html',greeting)
 
+def allRole(request):
+    roles = Role.objects.all()
+    greeting = {}
+    greeting['roles'] = roles
+    return render(request,'admin/allrole.html',greeting)
+
+
+def is_present(all_document,document):
+    for i in all_document:
+        if i.id == document.id:
+            return True
+    return False
+
+def get_path_from_url(url):
+    parsed_url = urlparse(url)
+    return parsed_url.path
+
+@csrf_exempt
+def roleDetail(request,id):
+    role = Role.objects.get(pk=id)
+    documents = role.documents.all()
+    all_documents = Documents.objects.all()
+    previous_page = request.META.get('HTTP_REFERER')
+    path = get_path_from_url(previous_page)
+    previous_page = path
+    temp = []
+    for i in all_documents:
+        if not is_present(documents,i):
+            temp.append(i)
+
+    greeting = {}
+    greeting['role'] = role
+    greeting['documents'] = documents
+    greeting['lefted_documents'] = temp
+    
+    if request.method == 'POST':
+        document_id = request.POST.get('document')
+        documentRef = Documents.objects.get(pk=document_id)
+        role.documents.add(documentRef)
+        role.save()
+        return redirect(previous_page)
+        
+    
+    if request.method == 'DELETE':
+        document_id = request.GET.get('document')
+        documentRef = Documents.objects.get(pk=document_id)
+        role.documents.remove(documentRef)
+        role.save()
+        
+        return HttpResponse("hello world")
+        
+
+   
+
+    return render(request,'admin/roledetail.html',greeting)
 
 
 
@@ -84,11 +141,11 @@ def editDocument(request,id):
     greeting['document'] = document
 
     if request.method == "POST":
-        status = bool(int(request.POST.get('status')))
+        status = int(request.POST.get('status'))
         usermessage = request.POST.get('message')
 
         print(status)
-        document.approved = status
+        document.is_approved = status
         document.save()
         user = document.user
         value = "Approved" if status else "Disapproved"

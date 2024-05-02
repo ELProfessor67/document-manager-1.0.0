@@ -34,7 +34,8 @@ class UsersDocuments(models.Model):
     document = models.ForeignKey(Documents, on_delete=models.CASCADE)   
     files = models.FileField(upload_to=custom_document_upload_to, null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    approved = models.BooleanField(default=False)
+    approved = models.BooleanField(default=None)
+    is_approved = models.IntegerField(default=-1)
 
     def __str__(self):
         return f"{self.document.name}-{self.user.username}" if self.document.name else 'Unnamed'

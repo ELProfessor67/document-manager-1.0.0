@@ -1,6 +1,7 @@
-from django.shortcuts import render, HttpResponse, get_object_or_404
+from django.shortcuts import render, HttpResponse, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Role, UserDetails, Documents, UsersDocuments
+
 
 # Create your views here.
 
@@ -15,7 +16,7 @@ def upoadDocument(request):
     if request.method == "POST":
         for document in documents:
             file = request.FILES.get(str(document.id))
-            UsersDocuments.objects.create(user=user,files=file,document=document)
+            UsersDocuments.objects.create(user=user,files=file,document=document,approved=None)
         greeting['message'] = "Upload Succesfully"
         return render(request,'documents/message.html',greeting)
 
@@ -39,7 +40,8 @@ def getOneDoucment(request, document_id):
                 document_file = UsersDocuments.objects.create(
                     document=documentRef,
                     user=request.user,
-                    files=uploaded_file
+                    files=uploaded_file,
+                    approved=None
                 )
                 document_file.save()
             else:
@@ -50,3 +52,11 @@ def getOneDoucment(request, document_id):
         return render(request,'documents/message.html',{"message":'Document Submit successfully!'})
     
     return render(request, 'documents/documentform.html',{"documents":default_document})
+
+
+
+@login_required(login_url='/')
+def ListDocument(request):
+    all_document = UsersDocuments.objects.filter(user=request.user)
+    
+    return render(request, 'documents/documentlist.html',{"documents":all_document})
